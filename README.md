@@ -27,6 +27,8 @@ you have the font 'Raleway' installed locally.
 A pre-made `.mp4` version is available to stream (or download, now you know the difference!). This was produced by running OBS Studio against
 a web browser viewing the above animation, recording at 60fps. It's intended for looping in a silent `<video>` element.
 
+https://github.com/user-attachments/assets/dae1ac2b-864e-4f0a-b297-79c910f6e6ae
+
 ## License
 
 The code used to produce the animation, the images, and the resulting video file are all released into the Public Domain or under a CC0
