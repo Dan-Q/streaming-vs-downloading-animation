@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Streaming vs Downloading Animation</title>
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fff;
+      font-family: 'Raleway';
+    }
+
+    main {
+      width: 1920px;
+      height: 1080px;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      gap: 6px;
+    }
+
+    section {
+      flex-grow: 1;
+      position: relative;
+      background: #eee;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 44px;
+      margin: 0;
+      position: absolute;
+      top: 24px;
+      width: 100%;
+    }
+
+    p {
+      text-align: center;
+      position: absolute;
+      bottom: 46px;
+      width: 100%;
+      font-size: 24px;
+    }
+
+    .server, .client, .output {
+      position: absolute;
+      height: 300px;
+    }
+
+    .server {
+      left: 260px;
+      top: 100px;
+    }
+
+    .client {
+      right: 260px;
+      top: 100px;
+    }
+
+    .output {
+      right: 0px;
+      top: 170px;
+      height: 150px;
+    }
+
+    .horse, .dupe {
+      position: absolute;
+      left: calc((var(--frame-number) * 2px) + 6px);
+      top: calc((var(--frame-number) * 3px) + 190px);
+      border: 2px solid black;
+      width: 196px;
+    }
+
+    .started .horse {
+      animation: streaming 3s ease-in-out calc(var(--frame-number) * 0.4s);
+      animation-iteration-count: 1;
+    }
+
+    .horse-tube-ui {
+      background: black;
+      color: white;
+      position: absolute;
+      right: 286px;
+      top: 209px;
+      width: 197px;
+      height: 96px;
+      align-content: center;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .buffering {
+      transition: opacity 0.1s 0s;
+    }
+
+    .started .buffering {
+      transition: opacity 0.1s 4s;
+      opacity: 0;
+    }
+
+    @keyframes streaming {
+      0% {
+        width: 196px;
+      }
+
+      60% {
+        left: 1413px;
+        top: 206px;
+      }
+
+      70% {
+        left: 1413px;
+        top: 206px;
+        width: 196px;
+      }
+
+      90% {
+        left: 1688px;
+        top: 206px;
+        opacity: 1;
+      }
+
+      100% {
+        left: 1800px;
+        top: 206px;
+        opacity: 0;
+        width: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="streaming">
+      <h1>Streaming</h1>
+      <p>Frames are downloaded, displayed, then discarded.</p>
+
+      <div class="horse-tube-ui subscribe">Don't forget to share, like and subscribe</div>
+      <div class="horse-tube-ui buffering">Buffering...</div>
+
+      <div class="horse-collection"></div>
+
+      <img src="server.svg" class="server">
+      <img src="horse-tube.svg" class="client">
+      <img src="trash-can.svg" class="output">
+    </section>
+
+    <section class="downloading">
+      <h1>Downloading</h1>
+      <p>Frames are downloaded, (usually) not displayed, then saved.</p>
+
+      <div class="horse-collection"></div>
+
+      <img src="server.svg" class="server">
+      <img src="pony-bay.svg" class="client">
+      <img src="video-file.svg" class="output">
+    </section>
+  </main>
+
+  <script type="text/javascript">
+    for(horseCollection of document.querySelectorAll('.horse-collection')){
+      for (let i = 12; i >= 1; i--) {
+        // Add horse image
+        let img = new Image();
+        img.src = `horse/${i.toString().padStart(2, '0')}.png`;
+        img.classList.add('horse', `frame-${i}`);
+        img.style.setProperty('--frame-number', i);
+        horseCollection.appendChild(img);
+
+        // Add dupe (stays in place while the horse frames move)
+        img = new Image();
+        img.src = `horse/${i.toString().padStart(2, '0')}.png`;
+        img.classList.add('dupe', `frame-${i}`);
+        img.style.setProperty('--frame-number', i);
+        horseCollection.appendChild(img);
+      }
+    }
+
+    document.addEventListener('keypress', function (event) {
+      document.querySelector('main').classList.toggle('started');
+    });
+  </script>
+</body>
+</html>
